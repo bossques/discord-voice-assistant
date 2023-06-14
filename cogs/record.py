@@ -40,7 +40,7 @@ class RecordView(discord.ui.View):
         )
 
 
-class VoiceExtension(commands.Cog):
+class RecordExtension(commands.Cog):
     def __init__(self, bot: discord.Bot):
         self.bot = bot
 
@@ -64,4 +64,4 @@ class VoiceExtension(commands.Cog):
 
 
 def setup(bot: discord.Bot):
-    bot.add_cog(VoiceExtension(bot))
+    bot.add_cog(RecordExtension(bot))
