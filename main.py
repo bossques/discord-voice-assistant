@@ -11,6 +11,8 @@ bot = Bot()
 async def on_ready():
     print(f'Ready! Logged in as {bot.user} ({bot.user.id})')
 
-bot.load_extension('cogs.record')
-bot.load_extension('cogs.tts')
+extensions = ['record', 'tts', 'transcribe']
+for extension in extensions:
+    bot.load_extension(f'cogs.{extension}')
+
 bot.run(os.getenv('DISCORD_TOKEN'))
