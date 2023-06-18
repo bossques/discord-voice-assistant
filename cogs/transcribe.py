@@ -1,8 +1,10 @@
 import io
+import struct
 import time
 import wave
 
 import discord
+from discord import opus
 from discord.ext import commands
 from faster_whisper import WhisperModel
 
@@ -61,6 +63,19 @@ class TranscribeVoiceClient(discord.VoiceClient):
         super().__init__(client, channel)
         self.speaking_states = {}
 
+    def recv_decoded_audio(self, data):
+        # do not fill quiet time with silence
+        silence = 0
+
+        data.decoded_data = (
+            struct.pack("<h", 0) * silence * opus._OpusStruct.CHANNELS
+            + data.decoded_data
+        )
+        while data.ssrc not in self.ws.ssrc_map:
+            time.sleep(0.05)
+
+        self.sink.write(data.decoded_data, self.ws.ssrc_map[data.ssrc]["user_id"])
+
     def unpack_audio(self, data):
         if 200 <= data[1] <= 204:
             return
@@ -112,6 +127,11 @@ class TranscribeVoiceClient(discord.VoiceClient):
                 f.writeframes(audio_bytes)
 
             buffer.seek(0)
+
+            # for debugging purposes
+            # with open(f'{user_id}-{int(time.time())}.wav', 'wb') as f:
+            #    f.write(buffer.getvalue())
+
             message = transcribe(buffer)
 
         self.client.loop.create_task(send_transcription(self.channel, user_id, message))
