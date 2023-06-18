@@ -64,13 +64,6 @@ class TranscribeVoiceClient(discord.VoiceClient):
         self.speaking_states = {}
 
     def recv_decoded_audio(self, data):
-        # do not fill quiet time with silence
-        silence = 0
-
-        data.decoded_data = (
-            struct.pack("<h", 0) * silence * opus._OpusStruct.CHANNELS
-            + data.decoded_data
-        )
         while data.ssrc not in self.ws.ssrc_map:
             time.sleep(0.05)
 
@@ -129,8 +122,8 @@ class TranscribeVoiceClient(discord.VoiceClient):
             buffer.seek(0)
 
             # for debugging purposes
-            # with open(f'{user_id}-{int(time.time())}.wav', 'wb') as f:
-            #    f.write(buffer.getvalue())
+            with open(f'{user_id}-{int(time.time())}.wav', 'wb') as f:
+                f.write(buffer.getvalue())
 
             message = transcribe(buffer)
 
