@@ -1,4 +1,5 @@
 import io
+import os
 import struct
 import time
 import wave
@@ -121,9 +122,9 @@ class TranscribeVoiceClient(discord.VoiceClient):
 
             buffer.seek(0)
 
-            # for debugging purposes
-            with open(f'{user_id}-{int(time.time())}.wav', 'wb') as f:
-                f.write(buffer.getvalue())
+            if os.getenv('DEBUG', 'false').lower() == 'true':
+                with open(f'{user_id}-{int(time.time())}.wav', 'wb') as f:
+                    f.write(buffer.getvalue())
 
             message = transcribe(buffer)
 
