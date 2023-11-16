@@ -5,3 +5,4 @@ gTTS
 faster-whisper
 nvidia-cublas-cu11
 nvidia-cudnn-cu11
+gpt4all
