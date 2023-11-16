@@ -3,3 +3,5 @@ python-dotenv
 PyNaCl
 gTTS
 faster-whisper
+nvidia-cublas-cu11
+nvidia-cudnn-cu11

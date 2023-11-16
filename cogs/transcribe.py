@@ -1,18 +1,16 @@
 import io
 import os
-import struct
 import time
 import wave
 
 import discord
-from discord import opus
 from discord.ext import commands
 from faster_whisper import WhisperModel
 
 model = WhisperModel(
-    model_size_or_path='base.en',
-    device='cpu',
-    compute_type='int8'
+    model_size_or_path='large-v2',
+    device='cuda',
+    compute_type='float16'
 )
 
 
